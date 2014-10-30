@@ -5,8 +5,7 @@ function showNumberWithAnimation (i,j,randNum) {
 		'color': getNumberColor(randNum)
 	});
 	numCell.text(randNum);
-	numCell.animate({'width':'100px', 'height':'100px','top':getPosTop(i,j),
-		'left':getPosLeft(i,j)}, 100);
+	numCell.animate({'width':cellSideLength+'px', 'height':cellSideLength+'px','top':getPosTop(i,j),'left':getPosLeft(i,j)}, 100);
 }
 
 function showMoveAnimation (fromx,fromy,tox,toy) {

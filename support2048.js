@@ -1,9 +1,14 @@
+documentWidth = window.screen.availWidth;
+gridContainerWidth = documentWidth * 0.92;
+cellSideLength = documentWidth * 0.18;
+cellSpace = documentWidth * 0.04;
+
 function getPosTop (m,n) {
-	return 20+m*120;
+	return cellSpace+m*(cellSpace+cellSideLength);
 }
 
 function getPosLeft (m,n) {
-	return 20+n*120;
+	return cellSpace+n*(cellSpace+cellSideLength);
 }
 
 function getNumberBackgroundColor (number) {
@@ -31,7 +36,7 @@ function getNumberColor (number) {
 
 	return "white";
 }
-// 一旦存在有0的单元格即可返回
+
 function nospace (arr) {
 	for (var i = 0; i <4; i++) {
 		for (var j = 0; j < 4; j++) {

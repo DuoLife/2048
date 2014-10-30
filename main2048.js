@@ -3,14 +3,35 @@ var board = new Array();
 var scroe = 0;
 var hasConflicted = new Array();
 
+var startx = 0;
+var starty = 0;
+var endx = 0;
+var endy = 0;
+
 $(function() {
+	prepareForMobile();
 	newgame();
 });
 
+function prepareForMobile () {
+	if(documentWidth>500){
+		gridContainerWidth=500;
+		cellSideLength=100;
+		cellSpace=20;
+	}
+	$("#grid-container").css("width",gridContainerWidth - 2*cellSpace);
+	$("#grid-container").css("height",gridContainerWidth - 2*cellSpace);
+	$("#grid-container").css("padding",cellSpace);
+	$("#grid-container").css("border-radius",gridContainerWidth *0.02);
+
+	$(".grid-cell").css("width",cellSideLength);
+	$(".grid-cell").css("height",cellSideLength);
+	$(".grid-cell").css("border-radius",gridContainerWidth * 0.02);
+}
+
 function newgame () {
-	// 初始化棋盘格
 	init();
-	// 随机生成两个数字（2或4）
+	// 随机生成两个数字
 	generateOneNumber();
 	generateOneNumber();
 }
@@ -53,23 +74,26 @@ function updateBoardView () {
 				numCell.css({
 					'width': '0',
 					'height': '0',
-					'top':getPosTop(i,j)+50,
-					'left':getPosLeft(i,j)+50
+					'top':getPosTop(i,j)+cellSideLength * 0.5+'px',
+					'left':getPosLeft(i,j)+cellSideLength * 0.5+'px'
 				});
 			}else{
 				numCell.css({
-					'width': '100px',
-					'height': '100px',
-					'top':getPosTop(i,j),
-					'left':getPosLeft(i,j),
+					'width': cellSideLength +'px',
+					'height': cellSideLength +'px',
+					'top':getPosTop(i,j)+'px',
+					'left':getPosLeft(i,j)+'px',
 					'background-color':getNumberBackgroundColor(board[i][j]),
 					'color':getNumberColor(board[i][j])
 				});
 				numCell.text(board[i][j]);
+
 			}
 			hasConflicted[i][j] = false;
 		};
 	};
+	$(".number-cell").css("font-size",0.6 * cellSideLength+"px");
+	$(".number-cell").css("line-height",cellSideLength + "px")
 }
 
 function generateOneNumber () {
@@ -81,13 +105,13 @@ function generateOneNumber () {
 	var randy=parseInt(Math.floor(Math.random()*4));
 	// 优化生成随机位置的速度
 	var times = 0;
-	while(times <= 50){
+	while(times <= 200){
 		if(board[randx][randy]==0) break;
 		randx=parseInt(Math.floor(Math.random()*4));
 		randy=parseInt(Math.floor(Math.random()*4));
 		++times;
 	}
-	if(times=50){
+	if(times==200){
 		for (var i = 0; i < 3; i++) {
 			for (var j = 0; j < 3; j++) {
 				if(board[i][j]==0){
@@ -97,9 +121,10 @@ function generateOneNumber () {
 			};
 		};
 	}
-	// 生成随机数（以50%的概率生成2或4）
+	// 生成随机数
 	var randNum = Math.random()<0.5?2:4;
 	// 显示
+	// alert("random x,y:"+randx+","+randy);
 	board[randx][randy]=randNum;
 	showNumberWithAnimation(randx,randy,randNum);
 	return true;
@@ -137,6 +162,53 @@ $(document).keydown(function(event) {
 		default: break;
 	}
 });
+// 获取触碰信息
+document.addEventListener('touchstart',function(event){
+	startx = event.touches[0].pageX;
+	starty = event.touches[0].pageY;
+})
+
+document.addEventListener('touchmove',function(event){
+	event.preventDefault();
+})
+
+document.addEventListener('touchend',function(event){
+	endx = event.changedTouches[0].pageX;
+	endy = event.changedTouches[0].pageY;
+
+	var deltax = endx - startx;
+	var deltay = endy - starty;
+	//优化，过滤细微操作
+	if(Math.abs(deltax)<0.3*documentWidth&&Math.abs(deltay)<0.3*documentWidth){
+		return;
+	}
+
+	if(Math.abs(deltax)>Math.abs(deltay)){
+		if(deltax>0){
+			if(moveRight()){
+				setTimeout("generateOneNumber()",210);
+				setTimeout("isgameover()",300);
+			};
+		}else{
+			if(moveLeft()){
+				setTimeout("generateOneNumber()",210);
+				setTimeout("isgameover()",300);
+			};
+		}
+	}else{
+		if(deltay>0){
+			if(moveDown()){
+				setTimeout("generateOneNumber()",210);
+				setTimeout("isgameover()",300);
+			};
+		}else{
+			if(moveUp()){
+				setTimeout("generateOneNumber()",210);
+				setTimeout("isgameover()",300);
+			};
+		}
+	}
+})
 
 function isgameover () {
 	if (nospace(board)&&nomove(board)){

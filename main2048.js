@@ -1,6 +1,6 @@
 // 存储二维数组
 var board = new Array();
-var scroe = 0;
+var score = 0;
 var hasConflicted = new Array();
 
 var startx = 0;
@@ -93,7 +93,7 @@ function updateBoardView () {
 		};
 	};
 	$(".number-cell").css("font-size",0.6 * cellSideLength+"px");
-	$(".number-cell").css("line-height",cellSideLength + "px")
+	$(".number-cell").css("line-height",cellSideLength + "px");
 }
 
 function generateOneNumber () {
@@ -225,6 +225,7 @@ function moveLeft () {
 	if(!canMoveLeft(board)){
 		return false;
 	}
+	var leftScore = 0;
 // move
 	for (var i = 0; i < 4; i++) {
 		for (var j = 1; j < 4; j++) {
@@ -240,14 +241,15 @@ function moveLeft () {
 						board[i][k]+=board[i][j];
 						board[i][j]=0;
 						hasConflicted[i][k]=true;
-						score += board[i][k];
-						updateScore(score);
+						leftScore += board[i][k];
 						continue;
 					}
 				};
 			}	
 		};
 	};
+	score+=leftScore;
+	updateScore(score);
 	setTimeout('updateBoardView()',200);
 	return true;
 }
@@ -256,6 +258,7 @@ function moveUp () {
 	if(!canMoveUp(board)){
 		return false;
 	}
+	var upScore = 0;
 // move
 	for (var j = 0; j < 4; j++) {
 		for (var i = 1; i < 4; i++) {
@@ -271,14 +274,15 @@ function moveUp () {
 						board[k][j]+=board[i][j];
 						board[i][j]=0;
 						hasConflicted[k][j]=true;
-						score += board[k][j];
-						updateScore(score);
+						upScore += board[k][j];
 						continue;
 					}
 				};
 			}	
 		};
 	};
+	score+=upScore;
+	updateScore(score);
 	setTimeout('updateBoardView()',200);
 	return true;
 }
@@ -287,6 +291,7 @@ function moveRight () {
 	if(!canMoveRight(board)){
 		return false;
 	}
+	var rightScore = 0;
 // move
 	for (var i = 0; i < 4; i++) {
 		for (var j = 2; j >=0 ; j--) {
@@ -302,14 +307,16 @@ function moveRight () {
 						board[i][k]+=board[i][j];
 						board[i][j]=0;
 						hasConflicted[i][k]=true;
-						score += board[i][k];
-						updateScore(score);
+						// score += board[i][k];
+						rightScore+=board[i][k];
 						continue;
 					}
 				};
 			}	
 		};
 	};
+	score+=rightScore;
+	updateScore(score);
 	setTimeout('updateBoardView()',200);
 	return true;
 }
@@ -318,6 +325,7 @@ function moveDown () {
 	if(!canMoveDown(board)){
 		return false;
 	}
+	var downScore = 0
 	for (var j = 0; j < 4; j++) {
 		for (var i = 2; i >= 0; i--) {
 			if(board[i][j]!=0){
@@ -332,14 +340,16 @@ function moveDown () {
 						board[k][j]+=board[i][j];
 						board[i][j]=0;
 						hasConflicted[k][j]=true;
-						score += board[k][j];
-						updateScore(score);
+						downScore+=board[k][j];
+						// score += board[k][j];
 						continue;
 					}
 				};
 			}	
 		};
 	};
+	score+=downScore;
+	updateScore(score);
 	setTimeout('updateBoardView()',200);
 	return true;
 }

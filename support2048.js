@@ -126,5 +126,9 @@ function nomove (board) {
 }
 
 function updateScore (score) {
-	$("#score").text(score);
+	var preScore = $('#score').text();
+	if(score-preScore>0){
+		scoreAnimate(score-preScore);
+		$("#score").text(score);
+	}
 }

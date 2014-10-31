@@ -13,3 +13,12 @@ function showMoveAnimation (fromx,fromy,tox,toy) {
 	numCell.animate({'top':getPosTop(tox,toy),
 	 				 'left': getPosLeft(tox,toy)}, 200);
 }
+
+function scoreAnimate (addNum) {
+	var $addScore =  $('#addScore');
+	$addScore.text("+"+addNum);
+	$addScore.animate({'top': '-50%','display':'none'}, 600,function(){
+		$(this).text('');
+	});
+	$addScore.animate({'top': '50%','display':'block'}, 10);
+}
